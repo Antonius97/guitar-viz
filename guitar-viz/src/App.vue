@@ -1,8 +1,10 @@
 <template>
     <div>
         <main-nav></main-nav>
-        <div class="container is-fullhd">
-            <router-view></router-view>
+        <div class="container is-fullhd columns is-centered content-container">
+            <div class="column is-10">
+                <router-view></router-view>
+            </div>
         </div>
     </div>
 </template>
@@ -18,4 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
+.content-container {
+    margin-top: 40px;
+}
 </style>

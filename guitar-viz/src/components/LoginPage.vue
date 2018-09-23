@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="login({name, pass})">
+    <form @submit.prevent="login({name, pass})" class="login-form">
         <b-field
             label="Username"
             v-bind:type="nameStatus === 'idle' ? '' : (nameStatus === 'success' ? 'is-success' : 'is-danger')"
@@ -102,5 +102,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.login-form .field {
+    margin-bottom: 20px;
+}
 </style>
