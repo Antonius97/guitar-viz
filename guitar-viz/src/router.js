@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from './components/Home';
+import SignupPage from './components/SignupPage.vue';
 import LoginPage from './components/LoginPage';
+import SettingsPage from './components/SettingsPage.vue';
 import store from './vuex/store';
 
 Vue.use(VueRouter);
@@ -12,18 +14,30 @@ const HomeRoute = {
     component: Home
 };
 
+const SignupRoute = {
+    name: "Signup",
+    path: "/signup",
+    component: SignupPage
+};
+
 const LoginRoute = {
     name: "Login",
     path: "/login",
     component: LoginPage
 };
 
-const routes = [HomeRoute, LoginRoute];
+const SettingsRoute = {
+    name: "Settings",
+    path: "/settings",
+    component: SettingsPage
+};
+
+const routes = [HomeRoute, SignupRoute, LoginRoute, SettingsRoute];
 
 const router = new VueRouter({ routes, mode: "history" });
 
 function requireAuth(to, from, next) {
-    if (!store.getters.isLogged && to.path !== LoginRoute.path) {
+    if (!store.getters.isLogged && ![LoginRoute.path, SignupRoute.path].includes(to.path)) {
         next({ name: "Login" });
     } else {
         next();

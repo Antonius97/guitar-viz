@@ -4,7 +4,9 @@
             <nav class="navbar is-transparent">
                 <div class="navbar-brand">
                     <a class="navbar-item">
-                        <p class="is-size-3 has-text-weight-semibold">GuitViz</p>
+                        <router-link to="/">
+                            <p class="is-size-3 has-text-weight-semibold">GuitViz</p>
+                        </router-link>
                     </a>
 
                     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainnavbar">
@@ -16,12 +18,22 @@
 
                 <div id="mainnavbar" class="navbar-menu">
                     <div class="navbar-start">
-                        <router-link v-if="isLogged" to="/" class="navbar-item" :class="{'is-active': currentPath === '/'}">
-                            <span class="icon">
-                                <i class="fas fa-home"></i>
-                            </span>
-                            Home
-                        </router-link>
+                        <div v-if="isLogged" class="navbar-item" :class="homeBtnClass">
+                            <router-link to="/">
+                                <span class="icon">
+                                    <i class="fas fa-home"></i>
+                                </span>
+                                Home
+                            </router-link>
+                        </div>
+                        <div v-if="isLogged" class="navbar-item" :class="settingsBtnClass">
+                            <router-link to="/settings">
+                                <span class="icon">
+                                    <i class="fas fa-cog"></i>
+                                </span>
+                                Settings
+                            </router-link>
+                        </div>
                     </div>
                     <div class="navbar-end">
                         <div class="navbar-item">
@@ -47,7 +59,14 @@
 import Vuex from 'vuex';
 
 export default {
+    data() {
+        return {
+            currentPath: "/login"
+        }
+    },
     mounted() {
+        this.currentPath = this.$router.currentRoute.path;
+
         const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
         $navbarBurgers.forEach( el => {
@@ -69,8 +88,23 @@ export default {
     },
     computed: {
         ...Vuex.mapGetters(['isLogged']),
-        currentPath() {
-            return this.$router.currentRoute.path;
+        console() {
+            return console;
+        },
+        homeBtnClass() {
+            return {
+                'has-background-light': this.currentPath === '/'
+            };
+        },
+        settingsBtnClass() {
+            return {
+                'has-background-light': this.currentPath === '/settings'
+            };
+        }
+    },
+    watch: {
+        "$route"(to, from) {
+            this.currentPath = to.path;
         }
     }
 }

@@ -1,41 +1,52 @@
 <template>
-    <form @submit.prevent="login({name, pass})" class="login-form">
-        <b-field
-            label="Username"
-            v-bind:type="nameStatus === 'idle' ? '' : (nameStatus === 'success' ? 'is-success' : 'is-danger')"
-            :message="usernameMessage">
-            <b-input
-                type="text"
-                v-model="name"
-                placeholder="Username"
-                required
-                icon-pack="fas"
-                icon="user"></b-input>
-        </b-field>
-        <b-field
-            label="Password"
-            v-bind:type="passStatus === 'idle' ? '' : (passStatus === 'success' ? 'is-success' : 'is-danger')"
-            :message="passwordMessage">
-            <b-input
-                type="password"
-                v-model="pass"
-                placeholder="Password"
-                password-reveal
-                required
-                icon-pack="fas"
-                icon="lock"></b-input>
-        </b-field>
-        <div class="control">
-            <button type="submit" class="button is-primary is-fullwidth">Login</button>
-        </div>
-    </form>
+    <div>
+        <form @submit.prevent="login({name, pass})" class="login-form">
+            <b-field
+                label="Username"
+                v-bind:type="nameStatus === 'idle' ? '' : (nameStatus === 'success' ? 'is-success' : 'is-danger')"
+                :message="usernameMessage">
+                <b-input
+                    type="text"
+                    v-model="name"
+                    placeholder="Username"
+                    required
+                    icon-pack="fas"
+                    icon="user"></b-input>
+            </b-field>
+            <b-field
+                label="Password"
+                v-bind:type="passStatus === 'idle' ? '' : (passStatus === 'success' ? 'is-success' : 'is-danger')"
+                :message="passwordMessage">
+                <b-input
+                    type="password"
+                    v-model="pass"
+                    placeholder="Password"
+                    password-reveal
+                    required
+                    icon-pack="fas"
+                    icon="lock"></b-input>
+            </b-field>
+            <div class="control">
+                <button type="submit" class="button is-primary is-fullwidth">Login</button>
+            </div>
+        </form>
+        <p class="signup-text is-text is-size-6 has-text-right">
+            Doesn't have account yet? Press <a class="signup-btn is-text is-paddingless is-marginless is-size-6" @click="gotoSignupPage()">Sign up</a> to register
+        </p>
+    </div>
 </template>
 
 <script>
-import Crypto from 'crypto-js';
+import Crypto from '../utils/Crypto.js';
 import dict from '../dict';
+import Vuex from 'vuex';
 
 export default {
+    mounted() {
+        if (this.isLogged) {
+            this.$router.push("/");
+        }
+    },
     data() {
         return {
             name: "",
@@ -50,7 +61,7 @@ export default {
         login() {
             this.$store.dispatch("login", {
                 name: this.name,
-                pass: Crypto.enc.Base64.stringify(Crypto.SHA256(this.pass))
+                pass: Crypto.encode(this.pass, dict.PASS)
             }).then(
                 (status) => {
                     this.$router.push("/");
@@ -64,13 +75,18 @@ export default {
                         case dict.INVALID_PASS: {
                             this.validName = this.name;
                             this.invalidPass = this.pass;
+                            break;
                         }
                     }
                 }
             );
+        },
+        gotoSignupPage() {
+            this.$router.push("/signup");
         }
     },
     computed: {
+        ...Vuex.mapGetters(['isLogged']),
         nameStatus() {
             if (this.name === this.validName && this.name) {
                 return "success";
@@ -104,5 +120,12 @@ export default {
 <style lang="scss" scoped>
 .login-form .field {
     margin-bottom: 20px;
+}
+.signup-text {
+    margin-top: 10px;
+
+    .signup-btn {
+        text-decoration: underline;
+    }
 }
 </style>

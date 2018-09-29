@@ -14,6 +14,7 @@ export default {
         state.isLogged = false;
         state.pending = false;
     },
+    [dict.SET_USERNAME]: (state, username) => state.username = username,
     [dict.LOGOUT]: state => state.isLogged = false,
     [dict.ENABLE_BLUETOOTH]: state => state.bluetoothEnabled = true,
     [dict.DISABLE_BLUETOOTH]: state => state.bluetoothEnabled = false,

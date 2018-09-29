@@ -1,10 +1,30 @@
 import dict from '../dict';
-import Crypto from 'crypto-js';
+import Crypto from '../utils/Crypto';
 
-const nameSalt = "SALT!@#";
+function padstart(len, w, c = "0") {
+    w = "" + w;
+    while (w.length < len) w = c + w;
+    return w;
+}
+
+function encodeUserData(user) {
+    let nametoken = Crypto.encode(user.name, dict.NAME);
+    let idtoken = Crypto.encode(user.id, dict.ID);
+    let fullToken = Crypto.encode(nametoken + idtoken + padstart(4, idtoken.length), dict.NAMEID);
+    return fullToken;
+}
+
+function decodeUserData(token) {
+    let fullToken = Crypto.decode(token, dict.NAMEID);
+    let idTokenLength = +fullToken.slice(-4);
+    fullToken = fullToken.slice(0, -4);
+    let idToken = fullToken.slice(idTokenLength);
+    let id = Crypto.decode(idToken, dict.ID);
+    return { id: +id };
+}
 
 const usersDB = {
-    users: [{ name: "Omiant", pass: Crypto.enc.Base64.stringify(Crypto.SHA256("qwe")) }]
+    users: [{ name: "Omiant", pass: Crypto.encode("qwe", dict.PASS), id: 0 }]
 };
 
 const bluetooth = {
@@ -28,15 +48,33 @@ const bluetooth = {
 };
 
 export default {
+    signup({ commit }, creds) {
+        return new Promise((resolve, reject) => {
+            let user = usersDB.users.find(user => creds.name === user.name);
+            if (user) {
+                reject(dict.INVALID_NAME);
+            } else {
+                let id = usersDB.users.length;
+                let newUser = {
+                    id,
+                    name: creds.name,
+                    pass: creds.pass
+                };
+                usersDB.users.push(newUser);
+                resolve(dict.SUCCESS);
+            }
+        });
+    },
     login({ commit }, creds) {
         commit(dict.LOGIN);
         return new Promise((resolve, reject) => {
             let user = usersDB.users.find(user => creds.name === user.name);
             if (user) {
                 if (user.pass === creds.pass) {
-                    let token = Crypto.enc.Base64.stringify(Crypto.SHA256(creds.name + nameSalt));
-                    localStorage.setItem("token", token);
+                    let fullToken = encodeUserData(user);
+                    localStorage.setItem("token", fullToken);
                     commit(dict.LOGIN_SUCCESS);
+                    commit(dict.SET_USERNAME, user.name);
                     resolve(dict.SUCCESS);
                 } else {
                     commit(dict.LOGIN_FAIL_PASS);
@@ -50,7 +88,26 @@ export default {
     },
     logout({ commit }) {
         localStorage.removeItem("token");
+        commit(dict.DISCONNECT_BLUTOOTH_DEVICE);
         commit(dict.LOGOUT);
+    },
+    changePassword({ commit }, creds) {
+        return new Promise((resolve, reject) => {
+            let token = localStorage.getItem("token");
+            let userId = decodeUserData(token).id;
+            let user = usersDB.users.find(user => userId === user.id);
+            if (user) {
+                if (user.pass === creds.oldPass) {
+                    user.pass = creds.newPass;
+                    resolve(dict.SUCCESS);
+                } else {
+                    reject(dict.INVALID_PASS);
+                }
+            }
+        });
+    },
+    setUsername({ commit }, username) {
+        commit(dict.SET_USERNAME, username);
     },
     enableBluetooth({ commit }) {
         commit(dict.ENABLE_BLUETOOTH);

@@ -1,5 +1,6 @@
 export default {
     isLogged: state => state.isLogged,
+    username: state => state.username,
     bluetoothEnabled: state => state.bluetoothEnabled,
     bluetoothDevices: state => state.bluetoothDevices,
     bluetoothDevicesLoading: state => state.bluetoothDevicesLoading,

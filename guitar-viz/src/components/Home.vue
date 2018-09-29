@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="title">Hello user, my old friend...</h1>
+        <h1 class="title">Hello {{ username }}, my old friend...</h1>
 
         <p class="no-devices-message is-size-4 has-text-centered has has-text-weight-semibold" v-if="!connectedDevice">At the moment you don't have any device connected.<br>You can connect to device by clicking this <a class="button is-success" @click="openAddDeviceModal()">button</a></p>
 
@@ -20,7 +20,7 @@ export default {
         DevicePage
     },
     computed:{
-        ...Vuex.mapGetters(['connectedDevice'])
+        ...Vuex.mapGetters(['connectedDevice', 'username'])
     },
     methods: {
         openAddDeviceModal() {
