@@ -18,5 +18,8 @@ export default {
     bluetoothDevicesLoading: false,
     connectedDevice: null,
     bluetoothDeviceConnecting: false,
-    bluetoothDeviceConnectingResult: ""
+    bluetoothDeviceConnectingResult: "",
+    deviceCalibrated: false,
+    languages: ["en", "ru"],
+    language: "ru"
 };

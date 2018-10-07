@@ -2,36 +2,36 @@
     <div>
         <form @submit.prevent="login({name, pass})" class="login-form">
             <b-field
-                label="Username"
+                :label="i18n.getStr('USERNAME')"
                 v-bind:type="nameStatus === 'idle' ? '' : (nameStatus === 'success' ? 'is-success' : 'is-danger')"
                 :message="usernameMessage">
                 <b-input
                     type="text"
                     v-model="name"
-                    placeholder="Username"
+                    :placeholder="i18n.getStr('USERNAME')"
                     required
                     icon-pack="fas"
                     icon="user"></b-input>
             </b-field>
             <b-field
-                label="Password"
+                :label="i18n.getStr('PASSWORD')"
                 v-bind:type="passStatus === 'idle' ? '' : (passStatus === 'success' ? 'is-success' : 'is-danger')"
                 :message="passwordMessage">
                 <b-input
                     type="password"
                     v-model="pass"
-                    placeholder="Password"
+                    :placeholder="i18n.getStr('PASSWORD')"
                     password-reveal
                     required
                     icon-pack="fas"
                     icon="lock"></b-input>
             </b-field>
             <div class="control">
-                <button type="submit" class="button is-primary is-fullwidth">Login</button>
+                <button type="submit" class="button is-primary is-fullwidth">{{ i18n.getStr("LOGIN") }}</button>
             </div>
         </form>
-        <p class="signup-text is-text is-size-6 has-text-right">
-            Doesn't have account yet? Press <a class="signup-btn is-text is-paddingless is-marginless is-size-6" @click="gotoSignupPage()">Sign up</a> to register
+        <p class="signup-text is-text is-size-6 has-text-right">{{ i18n.getStr("DONT_HAVE_ACCOUNT") }}
+             <a class="signup-btn is-text is-paddingless is-marginless is-size-6" @click="gotoSignupPage()">{{ i18n.getStr("SIGN_UP") }}</a> {{ i18n.getStr("TO_REGISTER") }}
         </p>
     </div>
 </template>
@@ -39,6 +39,7 @@
 <script>
 import Crypto from '../utils/Crypto.js';
 import dict from '../dict';
+import i18n from '../i18n.dictionary.js';
 import Vuex from 'vuex';
 
 export default {
@@ -49,6 +50,7 @@ export default {
     },
     data() {
         return {
+            i18n,
             name: "",
             pass: "",
             validName: "",

@@ -23,7 +23,7 @@
                                 <span class="icon">
                                     <i class="fas fa-home"></i>
                                 </span>
-                                Home
+                                {{ i18n.getStr("HOME") }}
                             </router-link>
                         </div>
                         <div v-if="isLogged" class="navbar-item" :class="settingsBtnClass">
@@ -31,11 +31,27 @@
                                 <span class="icon">
                                     <i class="fas fa-cog"></i>
                                 </span>
-                                Settings
+                                {{ i18n.getStr("SETTINGS") }}
                             </router-link>
                         </div>
                     </div>
                     <div class="navbar-end">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link">
+                                {{ i18n.getStr("LANGUAGE") }}
+                            </a>
+
+                            <div class="navbar-dropdown">
+                                <a
+                                    class="navbar-item"
+                                    v-for="language in languages" 
+                                    :key="language.id"
+                                    :class="{'is-active': language.id === activeLanguage}"
+                                    @click="changeLanguage(language.id)">
+                                    {{ language.text }}
+                                </a>
+                            </div>
+                        </div>
                         <div class="navbar-item">
                             <div class="field">
                                 <p class="control">
@@ -43,7 +59,7 @@
                                         <span class="icon">
                                             <i class="fas fa-sign-out-alt"></i>
                                         </span>
-                                        Logout
+                                        {{ i18n.getStr("LOGOUT") }}
                                     </a>
                                 </p>
                             </div>
@@ -56,11 +72,18 @@
 </template>
 
 <script>
+import i18n from '../i18n.dictionary.js';
 import Vuex from 'vuex';
+
+const languagesMap = {
+    en: "English",
+    ru: "Русский"
+};
 
 export default {
     data() {
         return {
+            i18n,
             currentPath: "/login"
         }
     },
@@ -84,10 +107,29 @@ export default {
             e.preventDefault();
             this.$store.dispatch('logout');
             this.$router.push("/login");
+        },
+        changeLanguage(lang) {
+            if (lang !== this.activeLanguage) {
+                this.$store.dispatch("changeLanguage", lang);
+                let route = this.$route.path;
+
+                this.$router.push("/not/existing/url");
+                setTimeout(() => {
+                    this.$router.push(route); //Sorta hack to update all text fields after changing language
+                }, 0);
+            }
         }
     },
     computed: {
-        ...Vuex.mapGetters(['isLogged']),
+        ...Vuex.mapGetters({
+            isLogged: "isLogged",
+            activeLanguage: "language"
+        }),
+        languages() {
+            let languages = this.$store.getters.languages;
+            return Object.keys(languagesMap)
+                            .map(l => ({id: l, text: languagesMap[l]}))
+        },
         console() {
             return console;
         },

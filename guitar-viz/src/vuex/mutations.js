@@ -1,6 +1,13 @@
 import dict from '../dict';
+import i18n from '../i18n.dictionary';
 
 export default {
+    [dict.CHANGE_LANGUAGE](state, language) {
+        state.language = language;
+        i18n.setLanguage(language);
+    },
+    [dict.ADD_LANGUAGE]: (state, language) => state.languages.push(language),
+    [dict.REMOVE_LANGUAGE]: (state, language) => state.languages.splice(state.languages.indexOf(language), 1),
     [dict.LOGIN]: state => state.pending = true,
     [dict.LOGIN_SUCCESS](state) {
         state.isLogged = true;
@@ -26,5 +33,6 @@ export default {
     [dict.BLUETOOTH_DEVICES_CONNECTED]: state => state.bluetoothDevicesConnecting = false,
     [dict.BLUETOOTH_DEVICES_CONNECTED_SUCCESS]: state => state.bluetoothDevicesConnectingStatus = dict.SUCCESS,
     [dict.BLUETOOTH_DEVICES_CONNECTED_FAIL]: state => state.bluetoothDevicesConnectingStatus = dict.FAIL,
-    [dict.DISCONNECT_BLUTOOTH_DEVICE]: state => state.connectedDevice = null
+    [dict.DISCONNECT_BLUTOOTH_DEVICE]: state => state.connectedDevice = null,
+    [dict.CALIBRATE_DEVICE]: state => state.deviceCalibrated = true
 };

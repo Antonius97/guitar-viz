@@ -48,6 +48,15 @@ const bluetooth = {
 };
 
 export default {
+    addLanguage({ commit }, lang) {
+        commit(dict.ADD_LANGUAGE, lang);
+    },
+    removeLanguage({ commit }, lang) {
+        commit(dict.REMOVE_LANGUAGE, lang);
+    },
+    changeLanguage({ commit }, lang) {
+        commit(dict.CHANGE_LANGUAGE, lang);
+    },
     signup({ commit }, creds) {
         return new Promise((resolve, reject) => {
             let user = usersDB.users.find(user => creds.name === user.name);
@@ -150,5 +159,8 @@ export default {
     },
     disconnectFromDevice({ commit }) {
         commit(dict.DISCONNECT_BLUTOOTH_DEVICE);
+    },
+    setDeviceCalibrated({ commit }) {
+        commit(dict.CALIBRATE_DEVICE);
     }
 };

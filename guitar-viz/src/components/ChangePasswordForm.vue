@@ -1,57 +1,67 @@
 <template>
-    <form @submit.prevent="changePassword()" class="change-pass-form">
-        <b-field
-            label="Old password"
-            v-bind:type="oldPassStatus === 'idle' ? '' : (oldPassStatus === 'success' ? 'is-success' : 'is-danger')"
-            :message="oldPassMessage">
-            <b-input
-                type="password"
-                v-model="oldPass"
-                placeholder="Enter old password"
-                required
-                password-reveal
-                icon-pack="fas"
-                icon="lock"></b-input>
-        </b-field>
-        <b-field
-            label="New password"
-            v-bind:type="newPassStatus === 'idle' ? '' : (newPassStatus === 'success' ? 'is-success' : 'is-danger')"
-            :message="newPassMessage">
-            <b-input
-                type="password"
-                v-model="newPass"
-                placeholder="Enter new password"
-                password-reveal
-                required
-                icon-pack="fas"
-                icon="lock"></b-input>
-        </b-field>
-        <b-field
-            label="Confirm new password"
-            v-bind:type="confPassStatus === 'idle' ? '' : (confPassStatus === 'success' ? 'is-success' : 'is-danger')"
-            :message="confPassMessage">
-            <b-input
-                type="password"
-                v-model="confPass"
-                placeholder="Enter new password one more time"
-                password-reveal
-                required
-                icon-pack="fas"
-                icon="lock"></b-input>
-        </b-field>
-        <div class="control">
-            <button type="submit" class="button is-primary is-fullwidth">Change password</button>
+    <div>
+        <p class="is-text is-size-2 has-text-weight-semibold">{{ i18n.getStr("CHANGE_PASSWORD") }}</p>
+        <br>
+        <div class="columns">
+            <div class="column is-6">
+                <form @submit.prevent="changePassword()" class="change-pass-form">
+                    <b-field
+                        :label="i18n.getStr('OLD_PASSWORD')"
+                        v-bind:type="oldPassStatus === 'idle' ? '' : (oldPassStatus === 'success' ? 'is-success' : 'is-danger')"
+                        :message="oldPassMessage">
+                        <b-input
+                            type="password"
+                            v-model="oldPass"
+                            :placeholder="i18n.getStr('ENTER_OLD_PASSWORD')"
+                            required
+                            password-reveal
+                            icon-pack="fas"
+                            icon="lock"></b-input>
+                    </b-field>
+                    <b-field
+                        :label="i18n.getStr('NEW_PASSWORD')"
+                        v-bind:type="newPassStatus === 'idle' ? '' : (newPassStatus === 'success' ? 'is-success' : 'is-danger')"
+                        :message="newPassMessage">
+                        <b-input
+                            type="password"
+                            v-model="newPass"
+                            :placeholder="i18n.getStr('ENTER_NEW_PASSWORD')"
+                            password-reveal
+                            required
+                            icon-pack="fas"
+                            icon="lock"></b-input>
+                    </b-field>
+                    <b-field
+                        :label="i18n.getStr('CONFIRM_NEW_PASSWORD')"
+                        v-bind:type="confPassStatus === 'idle' ? '' : (confPassStatus === 'success' ? 'is-success' : 'is-danger')"
+                        :message="confPassMessage">
+                        <b-input
+                            type="password"
+                            v-model="confPass"
+                            :placeholder="i18n.getStr('ENTER_NEW_PASSWORD_ONE_MORE_TIME')"
+                            password-reveal
+                            required
+                            icon-pack="fas"
+                            icon="lock"></b-input>
+                    </b-field>
+                    <div class="control">
+                        <button type="submit" class="button is-primary is-fullwidth">{{ i18n.getStr("CHANGE_PASSWORD") }}</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
 import Crypto from '../utils/Crypto.js';
+import i18n from '../i18n.dictionary.js';
 import dict from '../dict';
 
 export default {
     data() {
         return {
+            i18n,
             oldPass: "",
             newPass: "",
             confPass: "",
@@ -78,7 +88,7 @@ export default {
                     this.$router.push("/settings");
                     this.$toast.open({
                         duration: 3000,
-                        message: `Password was successfuly changed`,
+                        message: this.i18n.getStr("PASSWORD_WAS_SUCCESSFULY_CHANGED"),
                         position: 'is-bottom',
                         type: 'is-success'
                     });
@@ -131,18 +141,18 @@ export default {
         },
         oldPassMessage() {
             var status = this.oldPassStatus;
-            return status === "fail" ? "Incorrect old password" : "";
+            return status === "fail" ? this.i18n.getStr("INCORRECT_OLD_PASSWORD") : "";
         },
         newPassMessage() {
             var status = this.newPassStatus;
-            let message = status === "fail" ? "Incorrect new password" : "";
-            message = status === "notmatching" ? "New password should not be equal to old password" : message;
+            let message = status === "fail" ? this.i18n.getStr("INCORRECT_NEW_PASSWORD") : "";
+            message = status === "notmatching" ? this.i18n.getStr("NEW_PASSWORD_SHOULD_NOT_BE_EQUAL_TO_OLD_PASSWORD") : message;
             return message;
         },
         confPassMessage() {
             var status = this.confPassStatus;
-            let message = status === "fail" ? "Incorrect confirmation of new password" : "";
-            message = status === "notmatching" ? "New passwords doesn't matching" : message;
+            let message = status === "fail" ? this.i18n.getStr("INCORRECT_CONFIRMATION_OF_NEW_PASSWORD") : "";
+            message = status === "notmatching" ? this.i18n.getStr("NEW_PASSWORDS_ARE_NOT_MATCHING") : message;
             return message;
         }
     }

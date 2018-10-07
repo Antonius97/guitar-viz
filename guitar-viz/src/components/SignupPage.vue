@@ -2,49 +2,49 @@
     <div>
         <form @submit.prevent="register()" class="signup-form">
             <b-field
-                label="Username"
+                :label="i18n.getStr('USERNAME')"
                 v-bind:type="nameStatus === 'idle' ? '' : (nameStatus === 'success' ? 'is-success' : 'is-danger')"
                 :message="nameMessage">
                 <b-input
                     type="text"
                     v-model="name"
-                    placeholder="Username"
+                    :placeholder="i18n.getStr('USERNAME')"
                     required
                     icon-pack="fas"
                     icon="user"></b-input>
             </b-field>
             <b-field
-                label="Password"
+                :label="i18n.getStr('PASSWORD')"
                 v-bind:type="newPassStatus === 'idle' ? '' : (newPassStatus === 'success' ? 'is-success' : 'is-danger')"
                 :message="newPassMessage">
                 <b-input
                     type="password"
                     v-model="newPass"
-                    placeholder="Enter new password"
+                    :placeholder="i18n.getStr('ENTER_NEW_PASSWORD')"
                     password-reveal
                     required
                     icon-pack="fas"
                     icon="lock"></b-input>
             </b-field>
             <b-field
-                label="Confirm password"
+                :label="i18n.getStr('CONFIRM_PASSWORD')"
                 v-bind:type="confPassStatus === 'idle' ? '' : (confPassStatus === 'success' ? 'is-success' : 'is-danger')"
                 :message="confPassMessage">
                 <b-input
                     type="password"
                     v-model="confPass"
-                    placeholder="Enter password one more time"
+                    :placeholder="i18n.getStr('ENTER_NEW_PASSWORD_ONE_MORE_TIME')"
                     password-reveal
                     required
                     icon-pack="fas"
                     icon="lock"></b-input>
             </b-field>
             <div class="control">
-                <button type="submit" class="button is-primary is-fullwidth">Sign up</button>
+                <button type="submit" class="button is-primary is-fullwidth">{{ i18n.getStr("SIGN_UP") }}</button>
             </div>
         </form>
         <p class="login-text is-text is-size-6 has-text-right">
-            Have account? Press <a class="login-btn is-text is-paddingless is-marginless is-size-6" @click="gotoLoginPage()">Login</a> to enter
+            {{ i18n.getStr("HAVE_ACCOUNT") }} <a class="login-btn is-text is-paddingless is-marginless is-size-6" @click="gotoLoginPage()">{{ i18n.getStr("LOGIN") }}</a> {{ i18n.getStr("TO_ENTER") }}
         </p>
     </div>
 </template>
@@ -52,10 +52,12 @@
 <script>
 import Crypto from '../utils/Crypto.js';
 import dict from '../dict';
+import i18n from '../i18n.dictionary.js';
 
 export default {
     data() {
         return {
+            i18n,
             name: "",
             newPass: "",
             confPass: "",
