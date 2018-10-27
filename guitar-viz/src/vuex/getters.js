@@ -9,5 +9,6 @@ export default {
     bluetoothDeviceConnectingResult: state => state.bluetoothDeviceConnectingResult,
     deviceCalibrated: state => state.deviceCalibrated,
     language: state => state.language,
-    languages: state => state.languages
+    languages: state => state.languages,
+    activeMode: state => state.activeMode
 };

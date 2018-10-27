@@ -34,6 +34,14 @@
                                 {{ i18n.getStr("SETTINGS") }}
                             </router-link>
                         </div>
+                        <div v-if="isLogged" class="navbar-item" :class="helpBtnClass">
+                            <router-link to="/help">
+                                <span class="icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </span>
+                                {{ i18n.getStr("HELP") }}
+                            </router-link>
+                        </div>
                     </div>
                     <div class="navbar-end">
                         <div class="navbar-item has-dropdown is-hoverable">
@@ -141,6 +149,11 @@ export default {
         settingsBtnClass() {
             return {
                 'has-background-light': this.currentPath === '/settings'
+            };
+        },
+        helpBtnClass() {
+            return {
+                'has-background-light': this.currentPath === '/help'
             };
         }
     },

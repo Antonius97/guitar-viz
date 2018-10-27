@@ -21,5 +21,6 @@ export default {
     bluetoothDeviceConnectingResult: "",
     deviceCalibrated: false,
     languages: ["en", "ru"],
-    language: "ru"
+    language: localStorage.getItem("itfLang") || "ru",
+    activeMode: +(localStorage.getItem("activeMode") || "0")
 };

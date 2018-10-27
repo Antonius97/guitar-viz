@@ -162,5 +162,10 @@ export default {
     },
     setDeviceCalibrated({ commit }) {
         commit(dict.CALIBRATE_DEVICE);
+    },
+    setActiveMode({ commit }, newActiveMode) {
+        if (newActiveMode !== undefined) {
+            commit(dict.SET_ACTIVE_MODE, newActiveMode.toString());
+        }
     }
 };

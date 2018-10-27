@@ -34,5 +34,6 @@ export default {
     [dict.BLUETOOTH_DEVICES_CONNECTED_SUCCESS]: state => state.bluetoothDevicesConnectingStatus = dict.SUCCESS,
     [dict.BLUETOOTH_DEVICES_CONNECTED_FAIL]: state => state.bluetoothDevicesConnectingStatus = dict.FAIL,
     [dict.DISCONNECT_BLUTOOTH_DEVICE]: state => state.connectedDevice = null,
-    [dict.CALIBRATE_DEVICE]: state => state.deviceCalibrated = true
+    [dict.CALIBRATE_DEVICE]: state => state.deviceCalibrated = true,
+    [dict.SET_ACTIVE_MODE]: (state, mode) => (localStorage.setItem("activeMode", mode), state.activeMode = +mode)
 };

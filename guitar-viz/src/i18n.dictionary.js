@@ -1,4 +1,4 @@
-let lang = "ru";
+let lang = localStorage.getItem("itfLang") || "ru";
 
 let dict = {
     "CHANGE_LANGUAGE": {
@@ -188,12 +188,81 @@ let dict = {
     "TO_CALIBRATE_AGAIN": {
         "en": "if you want to calibrate device again",
         "ru": "если хотите еще раз откалибровать устройство"
+    },
+    "BRIGHTNESS": {
+        "en": "Brightness",
+        "ru": "Яркость"
+    },
+    "SENSITIVITY": {
+        "en": "Sensitivity",
+        "ru": "Чувствительность"
+    },
+    "DISABLED_DEVICE_OPTIONS": {
+        "en": "You should calibrate device to change options",
+        "ru": "Для того, чтобы изменить настройки устройства, нужно сначала откалибровать его"
+    },
+    "HELP": {
+        "en": "Help",
+        "ru": "Помощь"
+    },
+    "COMMON_SETTINGS": {
+        "en": "Common settings",
+        "ru": "Общие настройки"
+    },
+    "MODES": {
+        "en": "Modes",
+        "ru": "Режимы"
+    },
+    "VU_METER": {
+        "en": "VU meter",
+        "ru": "Измеритель уровня звука"
+    },
+    "GREEN_TO_RED": {
+        "en": "Green to red",
+        "ru": "От зеленого к красному"
+    },
+    "SMOOTH_RUNNING_RAINBOW": {
+        "en": "Smooth running rainbow",
+        "ru": "Плавно бегущая радуга"
+    },
+    "LIGHTSOUND_BY_FREQ": {
+        "en": "Lightsound by frequencies",
+        "ru": "Светомузыка по частотам"
+    },
+    "5_LINES": {
+        "en": "5 symmetric lines",
+        "ru": "5 полос симметрично"
+    },
+    "3_LINES": {
+        "en": "3 lines",
+        "ru": "3 полосы"
+    },
+    "1_LINE": {
+        "en": "1 line",
+        "ru": "1 полоса"
+    },
+    "STROBE_LIGHT": {
+        "en": "Strobe light",
+        "ru": "Стробоскоп"
+    },
+    "BACKLIGHT": {
+        "en": "Backlight",
+        "ru": "Подсветка"
+    },
+    "RUNNING_FREQ": {
+        "en": "Running frequencies",
+        "ru": "Бегущие частоты"
+    },
+    "SPECTRE_ANALYZER": {
+        "en": "Spectre analyzer",
+        "ru": "Анализатор спектра"
     }
 };
 
 export default {
     setLanguage(newLang) {
         lang = newLang;
+        localStorage.setItem("itfLang", newLang);
     },
     getStr(key) {
         let obj = dict[key];

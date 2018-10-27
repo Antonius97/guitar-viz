@@ -4,6 +4,7 @@ import Home from './components/Home';
 import SignupPage from './components/SignupPage.vue';
 import LoginPage from './components/LoginPage';
 import SettingsPage from './components/SettingsPage.vue';
+import HelpPage from './components/HelpPage.vue';
 import store from './vuex/store';
 
 Vue.use(VueRouter);
@@ -32,7 +33,13 @@ const SettingsRoute = {
     component: SettingsPage
 };
 
-const routes = [HomeRoute, SignupRoute, LoginRoute, SettingsRoute];
+const HelpRoute = {
+    name: "Help",
+    path: "/help",
+    component: HelpPage
+};
+
+const routes = [HomeRoute, SignupRoute, LoginRoute, SettingsRoute, HelpRoute];
 
 const router = new VueRouter({ routes, mode: "history" });
 
