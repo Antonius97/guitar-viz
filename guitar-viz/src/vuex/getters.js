@@ -10,5 +10,6 @@ export default {
     deviceCalibrated: state => state.deviceCalibrated,
     language: state => state.language,
     languages: state => state.languages,
-    activeMode: state => state.activeMode
+    activeMode: state => state.activeMode,
+    activeSubMode: state => state.activeSubMode
 };

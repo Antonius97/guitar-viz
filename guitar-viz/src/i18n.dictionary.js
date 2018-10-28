@@ -256,6 +256,74 @@ let dict = {
     "SPECTRE_ANALYZER": {
         "en": "Spectre analyzer",
         "ru": "Анализатор спектра"
+    },
+    "3_FREQ": {
+        "en": "3 frequencies",
+        "ru": "3 частоты"
+    },
+    "LOW_FREQ": {
+        "en": "Low frequencies",
+        "ru": "Низкие частоты"
+    },
+    "MID_FREQ": {
+        "en": "Middle frequencies",
+        "ru": "Средние частоты"
+    },
+    "HIGH_FREQ": {
+        "en": "High frequencies",
+        "ru": "Высокие частоты"
+    },
+    "SUBMODES": {
+        "en": "Submodes",
+        "ru": "Подрежимы"
+    },
+    "ANIMATION_SMOOTHNESS": {
+        "en": "Animation smoothness",
+        "ru": "Плавность анимации"
+    },
+    "RAINBOW_SPEED": {
+        "en": "Rainbow speed",
+        "ru": "Скорость радуги"
+    },
+    "FLASH_SMOOTHNESS": {
+        "en": "Flash smoothness",
+        "ru": "Плавность вспышек"
+    },
+    "FLASH_FREQUENCY": {
+        "en": "Flash frequency",
+        "ru": "Частота вспышек"
+    },
+    "CONSTANT_COLOR": {
+        "en": "Constant color",
+        "ru": "Постоянный цвет"
+    },
+    "COLOR": {
+        "en": "Color",
+        "ru": "Цвет"
+    },
+    "SATURATION": {
+        "en": "Saturation",
+        "ru": "Насыщенность"
+    },
+    "SMOOTH_COLOR_CHANGING": {
+        "en": "Smooth color changing",
+        "ru": "Плавная смена цвета"
+    },
+    "SPEED": {
+        "en": "Speed",
+        "ru": "Скорость"
+    },
+    "RUNNING_RAINBOW": {
+        "en": "Running rainbow",
+        "ru": "Бегущая радуга"
+    },
+    "RAINBOW_STEP": {
+        "en": "Rainbow step",
+        "ru": "Шаг радуги"
+    },
+    "COLOR_STEP": {
+        "en": "Color step",
+        "ru": "Шаг цвета"
     }
 };
 

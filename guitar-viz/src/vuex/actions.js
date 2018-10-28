@@ -167,5 +167,10 @@ export default {
         if (newActiveMode !== undefined) {
             commit(dict.SET_ACTIVE_MODE, newActiveMode.toString());
         }
+    },
+    setActiveSubMode({ commit }, newActiveSubMode) {
+        if (newActiveSubMode !== undefined) {
+            commit(dict.SET_ACTIVE_SUBMODE, newActiveSubMode.toString());
+        }
     }
 };

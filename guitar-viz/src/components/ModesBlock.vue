@@ -19,8 +19,57 @@
                         <p class="subtitle is-6" v-if="card.subtitle">{{ card.subtitle }}</p>
                         <div
                                 class="card-content-container"
-                                v-html="card.content"
                                 :class="{'active': isModeActive(card.id)}">
+                            <div class="content">
+                                <p>{{ card.description }}</p>
+
+                                <br>
+
+                                <aside class="menu" v-if="card.submodes && card.submodes.length !== 1">
+                                    <p class="menu-label">{{ i18n.getStr("SUBMODES") }}</p>
+                                    <ul class="menu-list">
+                                        <li
+                                                v-for="submode in card.submodes" 
+                                                :key="submode.id">
+                                            <a 
+                                                    :class="{'is-active': isSubModeActive(submode.id)}"
+                                                    @click="setActiveSubMode(submode.id)">
+                                                {{submode.title}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </aside>
+
+                                <br>
+
+                                <aside
+                                        class="mode-settings menu"
+                                        v-if="activeSubModeSettings.length">
+                                    <p class="menu-label">{{ i18n.getStr("SETTINGS") }}</p>
+
+                                    <div
+                                            class="field is-horizontal"
+                                            v-for="inp in activeSubModeSettings" :key="inp.id">
+                                        <div class="field-label is-normal is-pulled-left">
+                                            <label class="label">{{inp.label}} ({{ inp.value }})</label>
+                                        </div>
+                                        <div class="field-body">
+                                            <div class="field">
+                                                <div class="control">
+                                                    <range-input
+                                                        v-if="inp.type === 'range'"
+                                                        :min="inp.min"
+                                                        :max="inp.max"
+                                                        :value="inp.value || 0"
+                                                        :change="optionChanged.bind(this, inp.id)"
+                                                    >
+                                                    </range-input>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </aside>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -33,7 +82,12 @@
 import i18n from '../i18n.dictionary';
 import Vuex from 'vuex';
 
+import RangeInput from './RangeInput.vue';
+
 export default {
+    components: {
+        RangeInput
+    },
     data() {
         return {
             i18n,
@@ -42,43 +96,345 @@ export default {
                 id: 0,
                 title: i18n.getStr("VU_METER"),
                 subtitle: i18n.getStr("GREEN_TO_RED"),
-                content: `<div>1</div>`
+                description: "1",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("GREEN_TO_RED"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 1,
                 title: i18n.getStr("VU_METER"),
                 subtitle: i18n.getStr("SMOOTH_RUNNING_RAINBOW"),
-                content: `<div>2</div>`
+                description: "2",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("SMOOTH_RUNNING_RAINBOW"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("RAINBOW_SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 2,
                 title: i18n.getStr("LIGHTSOUND_BY_FREQ"),
                 subtitle: i18n.getStr("5_LINES"),
-                content: `<div>3</div>`
+                description: "3",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("5_LINES"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 3,
                 title: i18n.getStr("LIGHTSOUND_BY_FREQ"),
                 subtitle: i18n.getStr("3_LINES"),
-                content: `<div>4</div>`
+                description: "4",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("3_LINES"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 4,
                 title: i18n.getStr("LIGHTSOUND_BY_FREQ"),
                 subtitle: i18n.getStr("1_LINE"),
-                content: `<div>5</div>`
+                description: "5",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("3_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 1,
+                    title: i18n.getStr("LOW_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 2,
+                    title: i18n.getStr("MID_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 3,
+                    title: i18n.getStr("HIGH_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("ANIMATION_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 5,
                 title: i18n.getStr("STROBE_LIGHT"),
-                content: `<div>6</div>`
+                description: "6",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("3_LINES"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("FLASH_SMOOTHNESS"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("FLASH_FREQUENCY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 6,
                 title: i18n.getStr("BACKLIGHT"),
-                content: `<div>7</div>`
+                description: "7",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("CONSTANT_COLOR"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("COLOR"),
+                        type: "color"
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SATURATION"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 1,
+                    title: i18n.getStr("SMOOTH_COLOR_CHANGING"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SATURATION"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 2,
+                    title: i18n.getStr("RUNNING_RAINBOW"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("RAINBOW_STEP"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 7,
                 title: i18n.getStr("RUNNING_FREQ"),
-                content: `<div>8</div>`
+                description: "8",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("3_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 1,
+                    title: i18n.getStr("LOW_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 2,
+                    title: i18n.getStr("MID_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }, {
+                    id: 3,
+                    title: i18n.getStr("HIGH_FREQ"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("SPEED"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("SENSITIVITY"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }]
+                }]
             }, {
                 id: 8,
                 title: i18n.getStr("SPECTRE_ANALYZER"),
-                content: `<div>9</div>`
+                description: "9",
+                submodes: [{
+                    id: 0,
+                    title: i18n.getStr("SPECTRE_ANALYZER"),
+                    settings: [{
+                        id: 0,
+                        label: i18n.getStr("COLOR_STEP"),
+                        type: "range",
+                        min: 0,
+                        max: 10,
+                        value: 0
+                    }, {
+                        id: 1,
+                        label: i18n.getStr("COLOR"),
+                        type: "color"
+                    }]
+                }]
             }]
         };
     },
@@ -86,21 +442,63 @@ export default {
         isModeActive(mode) {
             return mode === this.activeMode;
         },
+        isSubModeActive(mode) {
+            return mode === this.activeSubMode;
+        },
         getModeCards(column) {
             return this.cards.filter((c, i) => (i % this.columnsNumber) === column);
         },
         setActiveMode(id) {
+            if (id === this.activeMode) return;
+            let oldActiveCardContentContainer = document.querySelector(".card-content-container.active");
+            oldActiveCardContentContainer.style.height = `0`;
+
             this.$store.dispatch("setActiveMode", id);
+            this.$store.dispatch("setActiveSubMode", 0);
+
+            this.recalcActiveCardHeight();
+        },
+        setActiveSubMode(id) {
+            this.$store.dispatch("setActiveSubMode", id);
+            this.recalcActiveCardHeight();
+        },
+        optionChanged(optionId, event) {
+            let value = +(event.target.value || "0");
+
+            let inpSettings = this.activeSubModeSettings.find(settings => settings.id === optionId);
+
+            inpSettings.value = value;
+        },
+        recalcActiveCardHeight() {
+            setTimeout(() => {
+                let newActiveCardContentContainer = document.querySelector(".card-content-container.active");
+
+                let iChildrenHeight = [...newActiveCardContentContainer.children].reduce((s, h) => s + h.offsetHeight, 0);
+
+                newActiveCardContentContainer.style.height = `${iChildrenHeight}px`;
+            }, 0);
         }
     },
     computed: {
-        ...Vuex.mapGetters(['activeMode']),
+        ...Vuex.mapGetters(['activeMode', 'activeSubMode']),
         cardRows() {
             return Math.ceil(this.cards.length / this.columnsNumber);
         },
         columns() {
             return [...Array(Math.min(this.cards.length, 3))].map((a, i) => ({id: i + 1, cards: this.getModeCards(i)}));
+        },
+        activeSubModeSettings() {
+            let activeMode = this.cards[this.activeMode];
+            if (!activeMode.submodes || !activeMode.submodes.length) return [];
+
+            let activeSubMode = activeMode.submodes[this.activeSubMode];
+            if (!activeSubMode.settings || !activeSubMode.settings.length) return [];
+
+            return activeSubMode.settings;
         }
+    },
+    mounted() {
+        this.recalcActiveCardHeight();
     }
 }
 </script>
@@ -109,7 +507,7 @@ export default {
 @import "../assets/vendor.style.scss";
 
 .card {
-    background-origin: center center;
+    transform-origin: center center;
     transition: transform 0.25s;
     margin-bottom: 30px;
 
@@ -135,6 +533,20 @@ export default {
 .mode-active {
     outline: 3px solid rgba($blue, 0.5);
     transform: scale(1.02);
+
+    &::after {
+        content: "Active";
+        display: block;
+        position: absolute;
+        width: 60px;
+        height: 30px;
+        top: 0;
+        right: 0;
+        text-align: center;
+        background-color: lighten($blue, 5%);
+        border-radius: 0 0 0 7.5px;
+        color: #fff;
+    }
 }
 
 .card-content-container {
@@ -145,9 +557,22 @@ export default {
                 height 0.1s;
 
     &.active {
-        height: 100px;
         opacity: 1;
         visibility: visible;
+    }
+
+    ul.menu-list {
+        list-style-type: none;
+        margin-left: 0;
+    }
+
+    & .field-label {
+        width: 15%;
+        min-width: 150px;
+    }
+
+    & > .field {
+        margin-bottom: 25px;
     }
 }
 </style>

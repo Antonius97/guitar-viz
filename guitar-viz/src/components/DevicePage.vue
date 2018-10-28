@@ -20,19 +20,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control">
-                                    <input type="range" class="range-input" min="0" max="1000" value="0" v-model="brightness">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal is-pulled-left">
-                            <label class="label">{{i18n.getStr("SENSITIVITY")}} ({{ sensitivity }})</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <div class="control">
-                                    <input type="range" class="range-input" min="0" max="1000" value="0" v-model="sensitivity">
+                                    <input type="range" class="range-input" min="0" max="100" value="0" v-model="brightness">
                                 </div>
                             </div>
                         </div>
@@ -63,8 +51,7 @@ export default {
     data() {
         return {
             i18n,
-            brightness: 0,
-            sensitivity: 0
+            brightness: 0
         };
     },
     props: {

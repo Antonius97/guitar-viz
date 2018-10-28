@@ -22,5 +22,6 @@ export default {
     deviceCalibrated: false,
     languages: ["en", "ru"],
     language: localStorage.getItem("itfLang") || "ru",
-    activeMode: +(localStorage.getItem("activeMode") || "0")
+    activeMode: +(localStorage.getItem("activeMode") || "0"),
+    activeSubMode: +(localStorage.getItem("activeSubMode") || "0")
 };
