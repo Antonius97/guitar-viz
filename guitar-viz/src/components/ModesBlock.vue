@@ -12,7 +12,8 @@
                         :class="{'mode-active': isModeActive(card.id)}"
                         @click="setActiveMode(card.id)">
                     <div class="card-image">
-                        <div class="mode-visual mode-visual-1"></div>
+                        <img v-if="card.previewSrc" :src="card.previewSrc" alt="1" width="100%">
+                        <div v-if="!card.previewSrc" class="mode-visual mode-visual-1"></div>
                     </div>
                     <div class="card-content">
                         <p class="title">{{ card.title }}</p>
@@ -84,6 +85,15 @@ import Vuex from 'vuex';
 
 import RangeInput from './RangeInput.vue';
 
+import previewImg1 from '../assets/mode_previews/1VU_opt.gif';
+import previewImg2 from '../assets/mode_previews/2VU_opt.gif';
+import previewImg3 from '../assets/mode_previews/3FREQ5LINES_opt.gif';
+import previewImg4 from '../assets/mode_previews/4FREQ3LINES_opt.gif';
+import previewImg5_1 from '../assets/mode_previews/5FREQ1LINE_opt.gif';
+import previewImg5_2 from '../assets/mode_previews/5FREQ1LINE_LOW_opt.gif';
+import previewImg5_3 from '../assets/mode_previews/5FREQ1LINE_MID_opt.gif';
+import previewImg5_4 from '../assets/mode_previews/5FREQ1LINE_HIGH_opt.gif';
+
 export default {
     components: {
         RangeInput
@@ -97,9 +107,11 @@ export default {
                 title: i18n.getStr("VU_METER"),
                 subtitle: i18n.getStr("GREEN_TO_RED"),
                 description: "1",
+                previewSrc: previewImg1,
                 submodes: [{
                     id: 0,
                     title: i18n.getStr("GREEN_TO_RED"),
+                    previewSrc: previewImg1,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -114,9 +126,11 @@ export default {
                 title: i18n.getStr("VU_METER"),
                 subtitle: i18n.getStr("SMOOTH_RUNNING_RAINBOW"),
                 description: "2",
+                previewSrc: previewImg2,
                 submodes: [{
                     id: 0,
                     title: i18n.getStr("SMOOTH_RUNNING_RAINBOW"),
+                    previewSrc: previewImg2,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -138,9 +152,11 @@ export default {
                 title: i18n.getStr("LIGHTSOUND_BY_FREQ"),
                 subtitle: i18n.getStr("5_LINES"),
                 description: "3",
+                previewSrc: previewImg3,
                 submodes: [{
                     id: 0,
                     title: i18n.getStr("5_LINES"),
+                    previewSrc: previewImg3,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -162,9 +178,11 @@ export default {
                 title: i18n.getStr("LIGHTSOUND_BY_FREQ"),
                 subtitle: i18n.getStr("3_LINES"),
                 description: "4",
+                previewSrc: previewImg4,
                 submodes: [{
                     id: 0,
                     title: i18n.getStr("3_LINES"),
+                    previewSrc: previewImg4,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -186,9 +204,11 @@ export default {
                 title: i18n.getStr("LIGHTSOUND_BY_FREQ"),
                 subtitle: i18n.getStr("1_LINE"),
                 description: "5",
+                previewSrc: previewImg5_1,
                 submodes: [{
                     id: 0,
                     title: i18n.getStr("3_FREQ"),
+                    previewSrc: previewImg5_1,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -207,6 +227,7 @@ export default {
                 }, {
                     id: 1,
                     title: i18n.getStr("LOW_FREQ"),
+                    previewSrc: previewImg5_2,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -225,6 +246,7 @@ export default {
                 }, {
                     id: 2,
                     title: i18n.getStr("MID_FREQ"),
+                    previewSrc: previewImg5_3,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -243,6 +265,7 @@ export default {
                 }, {
                     id: 3,
                     title: i18n.getStr("HIGH_FREQ"),
+                    previewSrc: previewImg5_4,
                     settings: [{
                         id: 0,
                         label: i18n.getStr("ANIMATION_SMOOTHNESS"),
@@ -453,6 +476,9 @@ export default {
             let oldActiveCardContentContainer = document.querySelector(".card-content-container.active");
             oldActiveCardContentContainer.style.height = `0`;
 
+            let activeMode = this.cards[this.activeMode];
+            activeMode.previewSrc = activeMode.submodes[0].previewSrc;
+
             this.$store.dispatch("setActiveMode", id);
             this.$store.dispatch("setActiveSubMode", 0);
 
@@ -461,6 +487,9 @@ export default {
         setActiveSubMode(id) {
             this.$store.dispatch("setActiveSubMode", id);
             this.recalcActiveCardHeight();
+
+            let activeMode = this.cards[this.activeMode];
+            activeMode.previewSrc = activeMode.submodes[id].previewSrc;
         },
         optionChanged(optionId, event) {
             let value = +(event.target.value || "0");
