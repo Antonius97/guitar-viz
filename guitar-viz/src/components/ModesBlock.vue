@@ -52,7 +52,8 @@
                                             class="field is-horizontal"
                                             v-for="inp in activeSubModeSettings" :key="inp.id">
                                         <div class="field-label is-normal is-pulled-left">
-                                            <label class="label">{{inp.label}} ({{ inp.value }})</label>
+                                            <label v-if="inp.type === 'color'" class="label">{{inp.label}}</label>
+                                            <label v-else class="label">{{inp.label}} ({{ inp.value }})</label>
                                         </div>
                                         <div class="field-body">
                                             <div class="field">
@@ -62,9 +63,15 @@
                                                         :min="inp.min"
                                                         :max="inp.max"
                                                         :value="inp.value || 0"
-                                                        :change="optionChanged.bind(this, inp.id)"
+                                                        :change="optionChanged.bind(this, inp.type, inp.id)"
                                                     >
                                                     </range-input>
+                                                    <color-picker
+                                                        v-if="inp.type === 'color'"
+                                                        :id="inp._inp_id"
+                                                        :value="inp.value || 'red'"
+                                                        :change="optionChanged.bind(this, inp.type, inp.id)">
+                                                    </color-picker>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,6 +91,7 @@ import i18n from '../i18n.dictionary';
 import Vuex from 'vuex';
 
 import RangeInput from './RangeInput.vue';
+import ColorPicker from './ColorPicker.vue';
 
 import previewImg1 from '../assets/mode_previews/1VU_opt.gif';
 import previewImg2 from '../assets/mode_previews/2VU_opt.gif';
@@ -96,7 +104,8 @@ import previewImg5_4 from '../assets/mode_previews/5FREQ1LINE_HIGH_opt.gif';
 
 export default {
     components: {
-        RangeInput
+        RangeInput,
+        ColorPicker
     },
     data() {
         return {
@@ -315,7 +324,8 @@ export default {
                     settings: [{
                         id: 0,
                         label: i18n.getStr("COLOR"),
-                        type: "color"
+                        type: "color",
+                        value: "red"
                     }, {
                         id: 1,
                         label: i18n.getStr("SATURATION"),
@@ -455,7 +465,8 @@ export default {
                     }, {
                         id: 1,
                         label: i18n.getStr("COLOR"),
-                        type: "color"
+                        type: "color",
+                        value: "red"
                     }]
                 }]
             }]
@@ -491,8 +502,33 @@ export default {
             let activeMode = this.cards[this.activeMode];
             activeMode.previewSrc = activeMode.submodes[id].previewSrc;
         },
-        optionChanged(optionId, event) {
+        optionChanged(type) {
+            let fn;
+            switch(type) {
+                case "range": {
+                    fn = this.rangeOptionChanged;
+                    break;
+                }
+                case "color": {
+                    fn = this.colorOptionChanged;
+                    break;
+                }
+                default: {
+                    fn = this.colorOptionChanged;
+                    break;
+                }
+            }
+            fn.apply(this, [...arguments].slice(1));
+        },
+        rangeOptionChanged(optionId, event) {
             let value = +(event.target.value || "0");
+
+            let inpSettings = this.activeSubModeSettings.find(settings => settings.id === optionId);
+
+            inpSettings.value = value;
+        },
+        colorOptionChanged(optionId, color) {
+            let value = color;
 
             let inpSettings = this.activeSubModeSettings.find(settings => settings.id === optionId);
 
@@ -528,6 +564,14 @@ export default {
     },
     mounted() {
         this.recalcActiveCardHeight();
+
+        let id = 0;
+
+        this.cards.forEach(card => {
+            card.submodes.forEach(submode => {
+                submode.settings.forEach(inp => inp._inp_id = id++);
+            });
+        });
     }
 }
 </script>
